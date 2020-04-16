@@ -7,17 +7,17 @@
 
 #### Install Redis ####
 
-sudo yum install make gcc libc6-dev tcl screen telnet zlib zlib-devel readline readline-devel
-wget http://download.redis.io/releases/redis-4.0.4.tar.gz
-tar xvzf redis-4.0.4.tar.gz
-mv redis-4.0.4 redis
-cd redis
-sudo make install
+sudo yum install make gcc libc6-dev tcl screen telnet zlib zlib-devel readline readline-devel  
+wget http://download.redis.io/releases/redis-4.0.4.tar.gz  
+tar xvzf redis-4.0.4.tar.gz  
+mv redis-4.0.4 redis  
+cd redis  
+sudo make install  
 make test
 
 
 #### Create config file ####
-For all instance of redis change the port pid cluster-config-file dir value accordingly
+For all instance of redis change the port pid cluster-config-file dir value accordingly  
 ##############################################################
 # bind 127.0.0.1
 protected-mode no
