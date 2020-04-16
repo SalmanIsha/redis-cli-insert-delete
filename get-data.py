@@ -7,4 +7,7 @@ rc = RedisCluster(startup_nodes=startup_nodes, decode_responses=True)
 
 
 print(rc.keys("*"))
+#To remove all data from cluster use below command
 #print(rc.flushall())
+#To save data forcefully to disk use below command
+#print(rc.save())
