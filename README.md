@@ -19,95 +19,88 @@ make test
 #### Create config file ####
 For all instance of redis change the port pid cluster-config-file dir value accordingly  
 ##############################################################
-# bind 127.0.0.1
-protected-mode no
-port 6379
-pidfile /var/run/redis_6379.pid
-cluster-enabled yes
-cluster-config-file nodes-6379.conf
-cluster-node-timeout 15000
-#Make sure following properties are added in each conf file
-  appendonly yes
-  save 900 1
-  save 300 10
-  save 60 10000
-  dir /home/vagrant/a_master/
+bind 0.0.0.0  
+protected-mode no  
+port 6379  
+pidfile /var/run/redis_6379.pid  
+cluster-enabled yes  
+cluster-config-file nodes-6379.conf  
+cluster-node-timeout 15000  
+#Make sure following properties are added in each conf file  
+  appendonly yes  
+  save 900 1  
+  save 300 10  
+  save 60 10000  
+  dir /home/vagrant/a_master/  
 ##############################################################
 
 #### Install Ruby ####
 
-wget https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.4.tar.gz
-tar -zxvf ruby-2.2.4.tar.gz
-cd ruby-2.2.4
-./configure
-make
-sudo make install
+wget https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.4.tar.gz  
+tar -zxvf ruby-2.2.4.tar.gz  
+cd ruby-2.2.4  
+./configure  
+make  
+sudo make install  
 
 #### Install gem ####
 
-wget https://rubygems.org/rubygems/rubygems-2.4.8.tgz --no-check-certificate
-tar -xvzf rubygems-2.4.8.tgz
-cd rubygems-2.4.8
-sudo /usr/local/bin/ruby setup.rb config && sudo /usr/local/bin/ruby setup.rb setup && sudo /usr/local/bin/ruby setup.rb install
+wget https://rubygems.org/rubygems/rubygems-2.4.8.tgz --no-check-certificate  
+tar -xvzf rubygems-2.4.8.tgz  
+cd rubygems-2.4.8  
+sudo /usr/local/bin/ruby setup.rb config && sudo /usr/local/bin/ruby setup.rb setup && sudo /usr/local/bin/ruby setup.rb install  
 
 #### Install redis gem ####
 
-wget https://rubygems.org/downloads/redis-4.1.0.gem
-sudo /usr/local/bin/gem install redis-4.1.1.gem
+wget https://rubygems.org/downloads/redis-4.1.0.gem  
+sudo /usr/local/bin/gem install redis-4.1.1.gem  
 
-#### Cluster Setup ####
-#### Add Master ####
-cd redis/src
-./redis-trib.rb create 192.168.3.31:6379 192.168.3.32:6380 192.168.3.33:6381
+#### Cluster Setup ####  
+#### Add Master ####  
+cd redis/src  
+./redis-trib.rb create 192.168.3.31:6379 192.168.3.32:6380 192.168.3.33:6381  
 
-#### Add Slave ####
-./redis-trib.rb add-node --slave --master-id 7f46599d998e24b8eb07513eb525b90f9b0488e3 192.168.3.32:6379 192.168.3.31:6379
-./redis-trib.rb add-node --slave --master-id c8bd0b335a3f75619163f42a77b2257a16dca1c1 192.168.3.33:6380 192.168.3.32:6380
-./redis-trib.rb add-node --slave --master-id 89c4b22476c10ba54840fd5e3fe920a5c72fed72 192.168.3.31:6381 192.168.3.33:6381
+#### Add Slave ####  
+./redis-trib.rb add-node --slave --master-id 7f46599d998e24b8eb07513eb525b90f9b0488e3 192.168.3.32:6379 192.168.3.31:6379  
+./redis-trib.rb add-node --slave --master-id c8bd0b335a3f75619163f42a77b2257a16dca1c1 192.168.3.33:6380 192.168.3.32:6380  
+./redis-trib.rb add-node --slave --master-id 89c4b22476c10ba54840fd5e3fe920a5c72fed72 192.168.3.31:6381 192.168.3.33:6381  
 
 #### To backup Redis data ####
 
-cp /home/vagrant/a_master/dump.rdb /home/vagrant/a_master/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb
-cp /home/vagrant/a_master/appendonly.aof /home/vagrant/a_master/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof
-cp /home/vagrant/c_slave/dump.rdb /home/vagrant/c_slave/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb
-cp /home/vagrant/c_slave/appendonly.aof /home/vagrant/c_slave/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof
+cp /home/vagrant/a_master/dump.rdb /home/vagrant/a_master/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb  
+cp /home/vagrant/a_master/appendonly.aof /home/vagrant/a_master/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof  
+cp /home/vagrant/c_slave/dump.rdb /home/vagrant/c_slave/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb  
+cp /home/vagrant/c_slave/appendonly.aof /home/vagrant/c_slave/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof  
 
-cp /home/vagrant/b_master/dump.rdb /home/vagrant/b_master/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb
-cp /home/vagrant/b_master/appendonly.aof /home/vagrant/b_master/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof
-cp /home/vagrant/a_slave/dump.rdb /home/vagrant/a_slave/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb
-cp /home/vagrant/a_slave/appendonly.aof /home/vagrant/a_slave/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof
+cp /home/vagrant/b_master/dump.rdb /home/vagrant/b_master/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb  
+cp /home/vagrant/b_master/appendonly.aof /home/vagrant/b_master/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof  
+cp /home/vagrant/a_slave/dump.rdb /home/vagrant/a_slave/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb  
+cp /home/vagrant/a_slave/appendonly.aof /home/vagrant/a_slave/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof  
 
-cp /home/vagrant/c_master/dump.rdb /home/vagrant/c_master/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb
-cp /home/vagrant/c_master/appendonly.aof /home/vagrant/c_master/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof
-cp /home/vagrant/b_slave/dump.rdb /home/vagrant/b_slave/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb
-cp /home/vagrant/b_slave/appendonly.aof /home/vagrant/b_slave/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof
+cp /home/vagrant/c_master/dump.rdb /home/vagrant/c_master/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb  
+cp /home/vagrant/c_master/appendonly.aof /home/vagrant/c_master/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof  
+cp /home/vagrant/b_slave/dump.rdb /home/vagrant/b_slave/backup/dump_$(date +\%Y\%m\%d\%H\%M\%S).rdb  
+cp /home/vagrant/b_slave/appendonly.aof /home/vagrant/b_slave/backup/appendonly_$(date +\%Y\%m\%d\%H\%M\%S).aof  
 
 #### To Restore #####
 
-1. Stop all redis instance
-2. Rename the existing dump.rdb and appendonly.aof
-3. mv backed up data to data directory.
-4. Start all redis instance.
+1. Stop all redis instance  
+2. Rename the existing dump.rdb and appendonly.aof  
+3. mv backed up data to data directory.  
+4. Start all redis instance.  
 
 
 #### To insert data ####
 
-sudo pip install redis-py-cluster
+sudo pip install redis-py-cluster  
 
-then run below command
+then run below command  
 
-python data.py
-###############################################################################################################################################
-from rediscluster import RedisCluster
+python data.py  
 
-startup_nodes = [{"host": "192.168.3.31", "port": "6379"},{"host": "192.168.3.32", "port": "6380"},{"host": "192.168.3.33", "port": "6381"}]
+#### To view/delete/save data ####
 
-# Note: decode_responses must be set to True when used with python3
-rc = RedisCluster(startup_nodes=startup_nodes, decode_responses=True)
+python get-data.py  
 
-for i in range(1, 60):
-     rc.set("foo_" + str(i), i)
-     print("foo_" + str(i), i)
-###############################################################################################################################################
 
 
