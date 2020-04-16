@@ -18,7 +18,7 @@ make test
 
 #### Create config file ####
 For all instance of redis change the port pid cluster-config-file dir value accordingly  
-##############################################################
+##############################################################  
 bind 0.0.0.0  
 protected-mode no  
 port 6379  
