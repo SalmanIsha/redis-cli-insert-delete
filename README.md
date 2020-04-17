@@ -18,6 +18,7 @@ make test
 
 #### Create config file ####
 For all instance of redis change the port, pidfile, cluster-config-file, dir value accordingly  
+vi /redis/a_master.conf  
 ##############################################################  
 bind 0.0.0.0  
 protected-mode no  
@@ -32,7 +33,20 @@ cluster-node-timeout 15000
   save 300 10  
   save 60 10000  
   dir /home/vagrant/a_master/  
-##############################################################
+##############################################################  
+start two redis instance in redis01 node:  
+
+screen -U -S a_master
+
+redis-server a_master.conf
+
+Ctrl+a+d
+
+screen -U -S c_slave
+
+redis-server c_slave.conf
+
+Ctrl+a+d
 
 #### Install Ruby ####
 
